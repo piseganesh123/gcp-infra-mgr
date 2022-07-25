@@ -3,13 +3,10 @@
 
 variable "project_id" {
   type = string
-  default = "vast-pad-319812"
+  default = "level-surfer-357407"
 }
 
 provider "google" {
-// credentials = file("/home/piseg432/keys/gce-creator.json")
-// credentials =  $(GOOGLE_CLOUD_KEYFILE_JSON)
- //project     = "vast-pad-319812"
  project     = var.project_id
  region      = "asia-south1"
 }
