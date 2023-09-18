@@ -20,11 +20,8 @@ for instance_name in $all_running_instances; do
     fi
 done
 
-# Iterate through each instance in the list and print its start time
+# Iterate through each instance in the list and stop it
 for instance_name in $running_instances; do
-#    start_time=$(gcloud compute instances describe $instance_name --format="value(creationTimestamp)")
-#    echo "Instance: $instance_name - Start Time: $start_time"
-
     gcloud compute instances stop $instance_name
 done
 
