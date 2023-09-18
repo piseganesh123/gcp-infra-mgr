@@ -27,3 +27,7 @@ for instance_name in $running_instances; do
 
     gcloud compute instances stop $instance_name
 done
+
+# log update in a temporary file on server, this file needs to be rotated manually
+
+echo "stopper success @" $(date) >> /tmp/vm-stopper.log
