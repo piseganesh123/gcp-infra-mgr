@@ -1,51 +1,29 @@
 #! /bin/bash
 
-#gcloud info 
-
-#gcloud projects list
-
-# arguments
-
-#Project=$1   #project id that you'll be working on 
 Project=""
-
-#vminsta=$2  #vm instances name that you are starting within that project id 
-vminsta=testvm
-#zone=$3    # zone of vm instance that is running in, this format will be in i.e  --zone=us-central1-a 
-zone="--zone=asia-south1-c"
+zone="asia-south1-c"
 gcloud config set project $Project 
 
-#gcloud compute instances list 
+gcloud config set compute/zone $zone
 
+# Get the list of all running instances and store it in a variable
+all_running_instances=$(gcloud compute instances list --filter="status=RUNNING" --format="value(name)")
 
-#gcloud compute instances start $vminsta $zone
+# Specify the instance name to exclude
+instance_to_exclude="gcp-vm-mgr"  # Replace with the actual instance name
 
-#gcloud compute ssh $vminsta $zone
+# Filter out the instance to exclude from the list
+running_instances=""
+for instance_name in $all_running_instances; do
+    if [ "$instance_name" != "$instance_to_exclude" ]; then
+        running_instances="$running_instances $instance_name"
+    fi
+done
 
+# Iterate through each instance in the list and print its start time
+for instance_name in $running_instances; do
+#    start_time=$(gcloud compute instances describe $instance_name --format="value(creationTimestamp)")
+#    echo "Instance: $instance_name - Start Time: $start_time"
 
-
-# An error exit function
-
-error_exit()
-{
-    echo "$1" 1>&2
-    exit 1
-}
-
-# Using error_exit
-
-if gcloud compute instances list --filter="status=running"; then
-
-  echo "Instance name: $instances"
-
-else
-    error_exit "Cannot start!  Aborting."
-fi 
-  if echo "logout"; then 
-  gcloud compute instances stop $vminsta $zone 
-
-  echo "gcloud compute instances stopping"  
-
-else
-  error_exit "cannot stop" 
-fi
+    gcloud compute instances stop $instance_name
+done
